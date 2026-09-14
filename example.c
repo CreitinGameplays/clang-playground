@@ -15,6 +15,7 @@ int main(void) {
     push_back(&my_vec, "femboys are tuff");
     
     // TEST ONE
+    printf("--- TEST ONE: PUSH 1mi TIMES, THEN FREE\n");
     // push 1mi times
     for (int i = 0; i < 1000000; i++){
         char x[72];
@@ -45,6 +46,7 @@ int main(void) {
     printf("done\n");
 
     // TEST TWO
+    printf("--- TEST TWO: PUSH 1mi TIMES, THEN FREE AGAIN, CHECK MEMORY\n");
     init_vector(&my_vec); // make the vec
 
     // push 1mi times, again
@@ -62,6 +64,32 @@ int main(void) {
 
     printf("freeing...\n");
     clean_vec(&my_vec);
+    printf("sleep again after free...\n");
+    rest(10);
+    printf("done\n");
+
+    // TEST THREE (pop_back test)
+    printf("--- TEST THREE: PUSH 1mi TIMES, THEN POP_BACK +999K TIMES, CHECK MEMORY\n");
+    init_vector(&my_vec);
+
+    // push 1mi times, once again
+    for (int i = 0; i < 1000000; i++){
+        char x[72];
+        snprintf(x, sizeof(x), "hey there again i am the string number %d", i);
+        char* val = strdup(x);
+        push_back(&my_vec, val);
+        free(val); // clean up after push_back
+    }
+
+    printf("before sleep, going sleep...\n");
+    rest(10);
+    printf("after sleep\n");
+
+    printf("popping back over 999k times...\n");
+    for (int i = 0; i < 999998; i++){
+        pop_back(&my_vec);
+    }
+
     printf("sleep again after free...\n");
     rest(10);
     printf("done\n");
