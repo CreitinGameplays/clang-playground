@@ -21,12 +21,12 @@ int main(void) {
         snprintf(x, sizeof(x), "hey i am the string number %d", i);
         char* val = strdup(x);
         push_back(&my_vec, val);
-        free(val);
+        free(val); // clean up after push_back
     }
 
     printf("before sleep, going sleep...\n");
     
-    _sleep(1024*5LL); // needs alternative
+    rest(10);
 
     printf("after sleep\n");
 
@@ -38,9 +38,10 @@ int main(void) {
     );
 
     printf("freeing...\n");
-    clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call will fail gracefully (should at least)
+    clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call
+    // will fail gracefully (should at least)
     printf("sleep again after free...\n");
-    _sleep(1024*5LL);
+    rest(10);
     printf("done\n");
 
     // TEST TWO
@@ -52,17 +53,17 @@ int main(void) {
         snprintf(x, sizeof(x), "hey there again i am the string number %d", i);
         char* val = strdup(x);
         push_back(&my_vec, val);
-        free(val);
+        free(val); // clean up after push_back
     }
 
     printf("before sleep, going sleep...\n");
-    _sleep(1024*5LL);
+    rest(10);
     printf("after sleep\n");
 
     printf("freeing...\n");
-    clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call will fail gracefully (should at least)
+    clean_vec(&my_vec);
     printf("sleep again after free...\n");
-    _sleep(1024*5LL);
+    rest(10);
     printf("done\n");
 
     // DECIMAL TEST
@@ -70,7 +71,7 @@ int main(void) {
     unsigned char test[5] = {0}; // must initialize with zeros or this will crash
     encode_utf8_math_edition(128405, test);
     // output
-    printf("%s", test);
+    printf("Decimal to UTF-8: %s", test);
 
     return 0;
 }
