@@ -1,6 +1,5 @@
 #include "include/vec.h"
 #include "include/conversor.h"
-
 //#include "windows.h" // FUCK Win32 API
 
 int main(void) {
@@ -15,13 +14,21 @@ int main(void) {
     push_back(&my_vec, "im the five");
     push_back(&my_vec, "femboys are tuff");
     
-    // push +30k times
-    for (int i = 0; i < 32768; i++){
+    // TEST ONE
+    // push 1mi times
+    for (int i = 0; i < 1000000; i++){
         char x[72];
         snprintf(x, sizeof(x), "hey i am the string number %d", i);
-        char* val = strdup(x); // alloc
+        char* val = strdup(x);
         push_back(&my_vec, val);
+        free(val);
     }
+
+    printf("before sleep, going sleep...\n");
+    
+    _sleep(1024*5LL); // needs alternative
+
+    printf("after sleep\n");
 
     // casting boring
     printf("TEST: %s, %f, %s, %c, %d\n",
@@ -30,10 +37,37 @@ int main(void) {
         my_vec.items[3]->i
     );
 
+    printf("freeing...\n");
     clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call will fail gracefully (should at least)
+    printf("sleep again after free...\n");
+    _sleep(1024*5LL);
+    printf("done\n");
 
+    // TEST TWO
+    init_vector(&my_vec); // make the vec
+
+    // push 1mi times, again
+    for (int i = 0; i < 1000000; i++){
+        char x[72];
+        snprintf(x, sizeof(x), "hey there again i am the string number %d", i);
+        char* val = strdup(x);
+        push_back(&my_vec, val);
+        free(val);
+    }
+
+    printf("before sleep, going sleep...\n");
+    _sleep(1024*5LL);
+    printf("after sleep\n");
+
+    printf("freeing...\n");
+    clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call will fail gracefully (should at least)
+    printf("sleep again after free...\n");
+    _sleep(1024*5LL);
+    printf("done\n");
+
+    // DECIMAL TEST
     // test the decimal to utf-8
-    unsigned char test[5] = {0}; // must initialize with zeros
+    unsigned char test[5] = {0}; // must initialize with zeros or this will crash
     encode_utf8_math_edition(128405, test);
     // output
     printf("%s", test);
