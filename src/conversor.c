@@ -1,4 +1,5 @@
 #include "../include/conversor.h"
+#include "windows.h"
 
 int encode_utf8(uint64_t input, unsigned char utf8[4]) {
     if (input <= 127){
@@ -94,4 +95,11 @@ double power_of(int x, int y) {
 
     return result;
 }
+
+int rest(int time) {
+    // windows only, sadly
+    Sleep(1024 * time);
+    return 0;
+}
+
 // end
