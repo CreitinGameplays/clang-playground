@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = clang
-CFLAGS = -fsanitize=address -g -fno-omit-frame-pointer -O0 -std=c23 -Wall -Wextra
+#CFLAGS = -fsanitize=address -g -fno-omit-frame-pointer -O0 -std=c23 -Wall -Wextra
+CFLAGS = -g -fno-omit-frame-pointer -O0 -std=c23 -Wall -Wextra # asan eats memory as hell
 SRC = src/vec.c \
 	src/conversor.c \
 	example.c \
