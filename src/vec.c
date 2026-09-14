@@ -103,7 +103,7 @@ int priv_push_back(Vec *vector, void* data, dataType v_type) {
             fprintf(stderr, "realloc fail\n");
             return 1;
         }
-        
+
         vector->items = temp;
         vector->dataType = temp2; // grow dataType
     }
@@ -120,9 +120,13 @@ int pop_back(Vec *vector) {
         return 1;
     } else {
         vector->size--; // less one
-
         // remove item
         if (vector->items[vector->size] != NULL){
+            // God's optimization
+            // strings are big af
+            if (vector->dataType[vector->size] == TYPE_STRING){
+                free(vector->items[vector->size]->s);
+            }
             free(vector->items[vector->size]); // free
             vector->items[vector->size] = NULL;
             vector->dataType[vector->size] = 0;
