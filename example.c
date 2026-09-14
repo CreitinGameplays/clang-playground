@@ -1,4 +1,6 @@
 #include "include/vec.h"
+#include "include/conversor.h"
+
 //#include "windows.h" // FUCK Win32 API
 
 int main(void) {
@@ -29,5 +31,12 @@ int main(void) {
     );
 
     clean_vec(&my_vec); clean_vec(&my_vec); // no double free, second call will fail gracefully (should at least)
+
+    // test the decimal to utf-8
+    unsigned char test[5] = {0}; // must initialize with zeros
+    encode_utf8_math_edition(128405, test);
+    // output
+    printf("%s", test);
+
     return 0;
 }
