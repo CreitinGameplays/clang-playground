@@ -126,7 +126,7 @@ int pop_back(Vec *vector) {
         if (vector->items[vector->size] != NULL){
             // God's optimization
             // strings are big af
-            if (vector->dataType[vector->size] == TYPE_STRING){ // if tthe last item is a TYPE_STRING
+            if (vector->dataType[vector->size] == TYPE_STRING){ // if the last item is a TYPE_STRING
                 free(vector->items[vector->size]->s); // free it
             }
             free(vector->items[vector->size]); // free the last item
