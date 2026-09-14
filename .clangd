@@ -1,0 +1,6 @@
+CompileFlags:
+  Compiler: clang
+  QueryDriver:
+    - C:\msys64\clang64\bin\clang*
+    - C:\msys64\clang64\bin\gcc*
+    - C:\msys64\clang64\bin\g++*
