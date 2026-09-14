@@ -23,7 +23,7 @@ int push_string(Vec* vector, char* value){
         return 1;
     }
 
-    strcpy(v->s, value);
+    strcpy(v->s, value); // "string copy?"
     if (priv_push_back(vector, v, TYPE_STRING) != 0) {
         free(v->s);
         free(v);
@@ -87,29 +87,31 @@ int init_vector(Vec *vector) {
     return 0;
 }
 
-int priv_push_back(Vec *vector, void* data, dataType v_type) {
+int priv_push_back(Vec *vector, Value* data, dataType v_type) {
     if (vector->size == vector->capacity){
-        vector->capacity *= 2;
-        Value** temp = (Value**)realloc(vector->items, vector->capacity * sizeof(void*)); // items needs to be realloc'd
-        
+        vector->capacity *= 2; // double the capacity
+
+        Value** temp = realloc(vector->items, vector->capacity * sizeof(*vector->items)); // items needs to be realloc'd
         if (temp == NULL){ // realloc fail
             fprintf(stderr, "realloc fail\n");
             return 1;
         }
+
         // ALSO realloc dataType
         dataType* temp2 = realloc(vector->dataType, vector->capacity * sizeof(dataType));
-
         if (temp2 == NULL){ // realloc fail
             fprintf(stderr, "realloc fail\n");
             return 1;
         }
 
+        // then we grow them
         vector->items = temp;
-        vector->dataType = temp2; // grow dataType
+        vector->dataType = temp2;
     }
 
+    // assign the values
     vector->items[vector->size] = data;
-    vector->dataType[vector->size] = v_type;
+    vector->dataType[vector->size] = v_type; // v_type enum
     vector->size++;
     return 0;
 }
@@ -119,21 +121,23 @@ int pop_back(Vec *vector) {
         fprintf(stderr, "error: vector is already empty.\n");
         return 1;
     } else {
-        vector->size--; // less one
-        // remove item
+        vector->size--; // decrease one
+        // if the last item of the vector is not null
         if (vector->items[vector->size] != NULL){
             // God's optimization
             // strings are big af
-            if (vector->dataType[vector->size] == TYPE_STRING){
-                free(vector->items[vector->size]->s);
+            if (vector->dataType[vector->size] == TYPE_STRING){ // if tthe last item is a TYPE_STRING
+                free(vector->items[vector->size]->s); // free it
             }
-            free(vector->items[vector->size]); // free
+            free(vector->items[vector->size]); // free the last item
             vector->items[vector->size] = NULL;
             vector->dataType[vector->size] = 0;
+            vector->items[vector->size] = 0;
         }
 
+        // resize the vector
         if (vector->size < vector->capacity / 4) { // 25%
-            vector->capacity /= 2;
+            vector->capacity /= 2; // vector capacity = vector capacity / 2
             void** temp = realloc(vector->items, vector->capacity * sizeof(void*));
             
             if (temp == NULL){ // realloc fail
@@ -160,8 +164,9 @@ int clean_vec(Vec *vector) {
         return 1;
     }
     if (vector->items != NULL) {
+        // loop each vector item
         for (int a = 0; a < vector->size; a++){
-            if (vector->dataType[a] == TYPE_STRING){ // free string
+            if (vector->dataType[a] == TYPE_STRING){ // free strings, they're big
                 free(vector->items[a]->s);
             }
             free(vector->items[a]); // free each element
@@ -170,11 +175,13 @@ int clean_vec(Vec *vector) {
         vector->items = NULL;
     }
 
+    // free dataType if it's not NULL
     if (vector->dataType != NULL) {
         free(vector->dataType);
         vector->dataType = NULL;
     }
 
+    // then zero everything
     vector->size = 0;
     vector->capacity = 0;
     printf("clean-up success\n");

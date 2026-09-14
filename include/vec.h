@@ -33,7 +33,7 @@ typedef enum {
 } dataType;
 
 typedef struct {
-    Value** items;
+    Value** items; // dynamic array of pointers
     dataType* dataType;
     int capacity;
     int size;
@@ -47,7 +47,7 @@ int push_double(Vec* vector, double value);
 int push_float(Vec* vector, float value);
 
 int init_vector(Vec *vector);
-int priv_push_back(Vec *vector, void* data, dataType v_type);
+int priv_push_back(Vec *vector, Value* data, dataType v_type);
 int pop_back(Vec *vector);
 int clean_vec(Vec *vector);
 
