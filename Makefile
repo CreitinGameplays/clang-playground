@@ -1,7 +1,9 @@
 # Compiler and flags
 CC = clang
 CFLAGS = -fsanitize=address -g -fno-omit-frame-pointer -O0 -std=c23 -Wall -Wextra
-SRC = src/vec.c example.c
+SRC = src/vec.c \
+	src/conversor.c \
+	example.c \
 
 # Directories and targets
 BUILD_DIR = build
