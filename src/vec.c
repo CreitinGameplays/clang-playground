@@ -72,7 +72,7 @@ int init_vector(Vec *vector) {
     // NULLing them before mallocs is mandatory, we're using goto for cleanup
     // we cannot safely free something that was never even initialized
     vector->items = NULL;
-    vector->dataType = NULL;
+    vector->dType = NULL;
 
     vector->items = malloc(sizeof(*vector->items) * vector->capacity);
     if (vector->items == NULL) { // malloc fail
@@ -80,8 +80,8 @@ int init_vector(Vec *vector) {
         goto clean;
     }
 
-    vector->dataType = malloc(sizeof(*vector->dataType) * vector->capacity);
-    if (vector->dataType == NULL) { // malloc fail (MALLOCA)
+    vector->dType = malloc(sizeof(*vector->dType) * vector->capacity);
+    if (vector->dType == NULL) { // malloc fail (MALLOCA)
         fprintf(stderr, "malloc fail\n");
         goto clean;
     }
@@ -93,8 +93,8 @@ int init_vector(Vec *vector) {
 clean:
     free(vector->items);
     vector->items = NULL;
-    free(vector->dataType);
-    vector->dataType = NULL;
+    free(vector->dType);
+    vector->dType = NULL;
     return 1;
 }
 
@@ -109,19 +109,19 @@ int priv_push_back(Vec *vector, Value* data, dataType v_type) {
         }
         vector->items = temp;
 
-        // ALSO realloc dataType
-        dataType* temp2 = realloc(vector->dataType, new_cap * sizeof(dataType));
+        // ALSO realloc dType
+        dataType* temp2 = realloc(vector->dType, new_cap * sizeof(dataType));
         if (temp2 == NULL){ // realloc fail
             fprintf(stderr, "realloc fail\n");
             return 1;
         }
-        vector->dataType = temp2;
+        vector->dType = temp2;
         vector->capacity = new_cap; // assign now, reallocs worked
     }
 
     // assign the values
     vector->items[vector->size] = data;
-    vector->dataType[vector->size] = v_type; // v_type enum
+    vector->dType[vector->size] = v_type; // v_type enum
     vector->size++;
     return 0;
 }
@@ -136,7 +136,7 @@ int pop_back(Vec *vector) {
         if (vector->items[vector->size] != NULL){
             // God's optimization
             // strings are big af
-            if (vector->dataType[vector->size] == TYPE_STRING){ // if the last item is a TYPE_STRING
+            if (vector->dType[vector->size] == TYPE_STRING){ // if the last item is a TYPE_STRING
                 free(vector->items[vector->size]->s); // free it
             }
             free(vector->items[vector->size]); // free the last item
@@ -154,14 +154,14 @@ int pop_back(Vec *vector) {
             }
             vector->items = temp;
 
-            // realloc dataType
-            dataType* temp2 = realloc(vector->dataType, new_cap * sizeof(dataType));
+            // realloc dType
+            dataType* temp2 = realloc(vector->dType, new_cap * sizeof(dataType));
 
             if (temp2 == NULL){ // realloc fail
                 fprintf(stderr, "realloc fail\n");
                 return 1;
             }
-            vector->dataType = temp2;
+            vector->dType = temp2;
             vector->capacity = new_cap; // vector capacity = vector capacity / 2 (after realloc's for safety)
         }
     }
@@ -176,7 +176,7 @@ int clean_vec(Vec *vector) {
     if (vector->items != NULL) {
         // loop each vector item
         for (int a = 0; a < vector->size; a++){
-            if (vector->dataType[a] == TYPE_STRING){ // free strings, they're big
+            if (vector->dType[a] == TYPE_STRING){ // free strings, they're big
                 free(vector->items[a]->s);
             }
             free(vector->items[a]); // free each element
@@ -185,10 +185,10 @@ int clean_vec(Vec *vector) {
         vector->items = NULL;
     }
 
-    // free dataType if it's not NULL
-    if (vector->dataType != NULL) {
-        free(vector->dataType);
-        vector->dataType = NULL;
+    // free dType if it's not NULL
+    if (vector->dType != NULL) {
+        free(vector->dType);
+        vector->dType = NULL;
     }
 
     // then zero everything

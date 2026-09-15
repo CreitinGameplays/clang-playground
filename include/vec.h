@@ -34,7 +34,7 @@ typedef enum {
 
 typedef struct {
     Value** items; // dynamic array of pointers
-    dataType* dataType; // i'm not refactoring the name now bro :broken_heart:
+    dataType* dType;
     int capacity;
     int size;
 } Vec;
