@@ -32,10 +32,10 @@ int main(void) {
     printf("after sleep\n");
 
     // casting boring
-    printf("TEST: %s, %f, %s, %c, %d\n",
+    printf("TEST: %s, %f, %s, %c, %d, %d\n",
         my_vec.items[5]->s, my_vec.items[0]->d,
         my_vec.items[1400]->s, my_vec.items[2]->c,
-        my_vec.items[3]->i
+        my_vec.items[3]->i, my_vec.dType[3] // my_vec.dType[3] will be 0 and 0 = TYPE_INT
     );
 
     printf("freeing...\n");
