@@ -69,26 +69,32 @@ int push_float(Vec* vector, float value){
 int init_vector(Vec *vector) {
     vector->size = 0;
     vector->capacity = 4;
+    // NULLing them before mallocs is mandatory, we're using goto for cleanup
+    vector->items = NULL;
+    vector->dataType = NULL;
+
     vector->items = malloc(sizeof(*vector->items) * vector->capacity);
     if (vector->items == NULL) { // malloc fail
         fprintf(stderr, "malloc fail\n");
-        free(vector->items);
-        vector->items = NULL;
-        return 1;
+        goto clean;
     }
 
     vector->dataType = malloc(sizeof(*vector->dataType) * vector->capacity);
     if (vector->dataType == NULL) { // malloc fail (MALLOCA)
         fprintf(stderr, "malloc fail\n");
-        free(vector->dataType);
-        if (vector->items != NULL){
-            free(vector->items); // if above malloc works but this one fails
-            vector->items = NULL;
-        }
-        vector->dataType = NULL;
-        return 1;
+        goto clean;
     }
+
     return 0;
+
+// I just thought goto would be a cleaner approach, Claude agreed
+// must be here at the end
+clean:
+    free(vector->items);
+    vector->items = NULL;
+    free(vector->dataType);
+    vector->dataType = NULL;
+    return 1;
 }
 
 int priv_push_back(Vec *vector, Value* data, dataType v_type) {
