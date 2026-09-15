@@ -70,6 +70,7 @@ int init_vector(Vec *vector) {
     vector->size = 0;
     vector->capacity = 4;
     // NULLing them before mallocs is mandatory, we're using goto for cleanup
+    // we cannot safely free something that was never even initialized
     vector->items = NULL;
     vector->dataType = NULL;
 
@@ -99,7 +100,7 @@ clean:
 
 int priv_push_back(Vec *vector, Value* data, dataType v_type) {
     if (vector->size == vector->capacity){
-        int new_cap = vector->capacity * 2; // separate var
+        int new_cap = vector->capacity * 2; // separate var for safety
 
         Value** temp = realloc(vector->items, new_cap * sizeof(*vector->items)); // items needs to be realloc'd
         if (temp == NULL){ // realloc fail
