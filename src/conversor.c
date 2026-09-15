@@ -97,8 +97,9 @@ double power_of(int x, int y) {
 }
 
 int rest(int time) {
-    // windows only, sadly
-    Sleep(1024 * time);
+    // still windows only, sadly
+    Sleep(1000 * time);
+    // dev note: i hate Win32 API so much
     return 0;
 }
 
